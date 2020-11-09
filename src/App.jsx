@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import useContentful from "./hooks/useContentful";
 import Person from "./components/Person";
 import Projects from "./components/Projects";
@@ -39,10 +39,9 @@ fragment projectFields on Project {
 }
 `;
 
-const IS_PREVIEW = true;
-
 function App() {
-  const { data, errors } = useContentful(query, IS_PREVIEW);
+  const [isPreview, setIsPreview] = useState(false);
+  const { data, errors } = useContentful(query, isPreview);
 
   if (errors) {
     return (
@@ -58,6 +57,15 @@ function App() {
 
   return (
     <div className="App">
+      <label>
+        <input
+          type="checkbox"
+          className="mr-2"
+          checked={isPreview}
+          onChange={() => setIsPreview(!isPreview)}
+        />
+        show preview
+      </label>
       <h1>React + contentful (Delivery API)- Graphql</h1>
       {data && (
         <>
