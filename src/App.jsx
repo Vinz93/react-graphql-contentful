@@ -5,8 +5,8 @@ import Projects from "./components/Projects";
 import "./tailwind.output.css";
 
 const query = `
-query {
-  person(id: "15jwOBqpxqSAOy2eOO4S0m") {
+query ($isPreview: Boolean = false) {
+  person(id: "15jwOBqpxqSAOy2eOO4S0m", preview: $isPreview) {
     name
     title
     github
@@ -16,27 +16,33 @@ query {
     }
     image {
       title
-      url(transform: {width:200 })
+      url(transform: {width: 200})
     }
   }
-  projectCollection {
+  projectCollection(limit: 20) {
     items {
-      name
-      slug
-      company
-      stack
-			screenshotsCollection {
-        items {
-          url
-        }
-      }
+      ...projectFields
+    }
+  }
+}
+
+fragment projectFields on Project {
+  name
+  slug
+  company
+  stack
+  screenshotsCollection {
+    items {
+      url
     }
   }
 }
 `;
 
+const IS_PREVIEW = true;
+
 function App() {
-  const { data, errors } = useContentful(query);
+  const { data, errors } = useContentful(query, IS_PREVIEW);
 
   if (errors) {
     return (
@@ -49,8 +55,6 @@ function App() {
   if (!data) {
     return <span> Loading ...</span>;
   }
-
-  console.log({ data });
 
   return (
     <div className="App">
