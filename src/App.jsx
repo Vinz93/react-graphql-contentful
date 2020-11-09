@@ -1,7 +1,7 @@
 import React from "react";
 import useContentful from "./hooks/useContentful";
 import Person from "./components/Person";
-import "./App.css";
+import "./tailwind.output.css";
 
 const query = `
 query {
