@@ -1,12 +1,15 @@
 import React from "react";
 import useContentful from "./hooks/useContentful";
+import Person from "./components/Person";
 import "./App.css";
 
 const query = `
 query {
   person(id:"15jwOBqpxqSAOy2eOO4S0m") {
     name
-    shortBio
+    title
+    github
+    twitter
   }
   productCollection (where: { price_lte: 40 }) {
     total
@@ -33,10 +36,7 @@ function App() {
     <div className="App">
       <h1>React + contentful (Delivery API)- Graphql</h1>
       {data && (
-        <div>
-          <p>{data?.person?.name}</p>
-          <p>{data.person.shortBio}</p>
-        </div>
+        <Person person={data.person}/>
       )}
     </div>
   );
