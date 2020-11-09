@@ -7,17 +7,7 @@ import "./tailwind.output.css";
 const query = `
 query ($isPreview: Boolean = false) {
   person(id: "15jwOBqpxqSAOy2eOO4S0m", preview: $isPreview) {
-    name
-    title
-    github
-    twitter
-    bio {
-      json
-    }
-    image {
-      title
-      url(transform: {width: 200})
-    }
+    ...personFields
   }
   projectCollection(limit: 20) {
     items {
@@ -35,6 +25,20 @@ fragment projectFields on Project {
     items {
       url
     }
+  }
+}
+
+fragment personFields on Person {
+  name
+  title
+  github
+  twitter
+  bio {
+    json
+  }
+  image {
+    title
+    url(transform: {width: 200})
   }
 }
 `;
