@@ -5,11 +5,15 @@ import "./App.css";
 
 const query = `
 query {
-  person(id:"15jwOBqpxqSAOy2eOO4S0m") {
+  person(id: "15jwOBqpxqSAOy2eOO4S0m") {
     name
     title
     github
     twitter
+    image {
+      title
+      url(transform: {width:300 })
+    }
   }
   productCollection (where: { price_lte: 40 }) {
     total
