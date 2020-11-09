@@ -1,5 +1,5 @@
-import React from 'react';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import "./App.css";
 
 const query = `
 query {
@@ -15,22 +15,42 @@ query {
     }
   }
 }
-`
+`;
 
 function App() {
-  fetch(`https://graphql.contentful.com/content/v1/spaces/u7a44gonzwk8/?access_token=P3vWnkLS98iN1fzTqXRfE_7sh4EKgeOpHJ5arTIQK5Y`, {
-    method: "POST",
-    headers: {
-      "Content-type": "application/json"
-    },
-    body: JSON.stringify({ query })
-  })
-  .then(response => response.json())
-  .then(json => console.log(json.data));
+  const [data, setData] = useState(null);
+  useEffect(() => {
+    const { REACT_APP_ACCESS_TOKEN, REACT_APP_SPACE_ID } = process.env;
+    fetch(
+      `https://graphql.contentful.com/content/v1/spaces/${REACT_APP_SPACE_ID}/`,
+      {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${REACT_APP_ACCESS_TOKEN}`,
+        },
+        body: JSON.stringify({ query }),
+      }
+    )
+      .then((response) => response.json())
+      .then((json) => setData(json.data));
+  }, []);
+
+  if (!data) {
+    return <span> Loading ...</span>;
+  }
 
   return (
     <div className="App">
       <h1>React + contentful (Delivery API)- Graphql</h1>
+      {data && (
+        <div>
+          {/* @ts-ignore */}
+          <p>{data?.person?.name}</p>
+          {/* @ts-ignore */}
+          <p>{data.person.shortBio}</p>
+        </div>
+      )}
     </div>
   );
 }
