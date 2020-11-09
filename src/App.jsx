@@ -19,7 +19,12 @@ query {
 `;
 
 function App() {
-  const { data } = useContentful(query);
+  const { data, errors } = useContentful(query);
+
+  if (errors) {
+  return <span style={{ color: "red " }}>{errors.map(error => error.message).join(",")}</span>
+  }
+
   if (!data) {
     return <span> Loading ...</span>;
   }
@@ -29,9 +34,7 @@ function App() {
       <h1>React + contentful (Delivery API)- Graphql</h1>
       {data && (
         <div>
-          {/* @ts-ignore */}
           <p>{data?.person?.name}</p>
-          {/* @ts-ignore */}
           <p>{data.person.shortBio}</p>
         </div>
       )}

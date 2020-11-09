@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 const useContentful = (query) => {
     const [data, setData] = useState(null);
+    const [errors, setErrors] = useState(null);
     useEffect(() => {
       const { REACT_APP_ACCESS_TOKEN, REACT_APP_SPACE_ID } = process.env;
       fetch(
@@ -16,10 +17,13 @@ const useContentful = (query) => {
         }
       )
         .then((response) => response.json())
-        .then((json) => setData(json.data));
+        .then(({ data, errors }) => {
+            if (errors) setErrors(errors);
+            if(data) setData(data);
+        }).catch(error => setErrors([error]));
     }, [query]);
-    
-    return { data }
+
+    return { data, errors }
 }
 
 export default useContentful;
