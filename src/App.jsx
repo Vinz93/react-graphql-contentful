@@ -1,6 +1,7 @@
 import React from "react";
 import useContentful from "./hooks/useContentful";
 import Person from "./components/Person";
+import Projects from "./components/Projects";
 import "./tailwind.output.css";
 
 const query = `
@@ -18,11 +19,17 @@ query {
       url(transform: {width:200 })
     }
   }
-  productCollection (where: { price_lte: 40 }) {
-    total
+  projectCollection {
     items {
-      commonName
-      price
+      name
+      slug
+      company
+      stack
+			screenshotsCollection {
+        items {
+          url
+        }
+      }
     }
   }
 }
@@ -32,18 +39,27 @@ function App() {
   const { data, errors } = useContentful(query);
 
   if (errors) {
-  return <span style={{ color: "red " }}>{errors.map(error => error.message).join(",")}</span>
+    return (
+      <span style={{ color: "red " }}>
+        {errors.map((error) => error.message).join(",")}
+      </span>
+    );
   }
 
   if (!data) {
     return <span> Loading ...</span>;
   }
 
+  console.log({ data });
+
   return (
     <div className="App">
       <h1>React + contentful (Delivery API)- Graphql</h1>
       {data && (
-        <Person person={data.person}/>
+        <>
+          <Person person={data.person} />
+          <Projects projects={data.projectCollection.items} />
+        </>
       )}
     </div>
   );
