@@ -1,4 +1,6 @@
 import React from "react";
+import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+import { BLOCKS, INLINES } from "@contentful/rich-text-types";
 
 interface IPerson {
   name: string;
@@ -9,7 +11,28 @@ interface IPerson {
     title: string;
     url: string;
   };
+  bio: {
+    json: any;
+  };
 }
+
+const RICHTEXT_OPTIONS = {
+  renderNode: {
+    [BLOCKS.HEADING_1]: (node: any, children: any) => {
+      return <h1 className="font-bold text-green-500">{children}</h1>;
+    },
+    [BLOCKS.PARAGRAPH]: (node: any, children: any) => {
+      return <p className="text-blue-400 lg:max-w-md mt-4">{children} </p>;
+    },
+    [INLINES.HYPERLINK]: (node: any, children: any) => {
+      return (
+        <a className="text-pink-200 font-bold" href={node.data.uri}>
+          {children}
+        </a>
+      );
+    },
+  },
+};
 
 const Person = ({ person }: { person: IPerson }) => {
   return (
@@ -26,6 +49,7 @@ const Person = ({ person }: { person: IPerson }) => {
           <h4 className="text-sm font-semibold">{person.title}</h4>
         </div>
       </div>
+      {documentToReactComponents(person.bio.json, RICHTEXT_OPTIONS)}
     </div>
   );
 };

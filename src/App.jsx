@@ -10,9 +10,12 @@ query {
     title
     github
     twitter
+    bio {
+      json
+    }
     image {
       title
-      url(transform: {width:300 })
+      url(transform: {width:200 })
     }
   }
   productCollection (where: { price_lte: 40 }) {
