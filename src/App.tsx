@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import useContentful from "./hooks/useContentful";
 import "./App.css";
 
 const query = `
@@ -18,24 +19,7 @@ query {
 `;
 
 function App() {
-  const [data, setData] = useState(null);
-  useEffect(() => {
-    const { REACT_APP_ACCESS_TOKEN, REACT_APP_SPACE_ID } = process.env;
-    fetch(
-      `https://graphql.contentful.com/content/v1/spaces/${REACT_APP_SPACE_ID}/`,
-      {
-        method: "POST",
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${REACT_APP_ACCESS_TOKEN}`,
-        },
-        body: JSON.stringify({ query }),
-      }
-    )
-      .then((response) => response.json())
-      .then((json) => setData(json.data));
-  }, []);
-
+  const { data } = useContentful(query);
   if (!data) {
     return <span> Loading ...</span>;
   }
